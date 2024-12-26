@@ -11,6 +11,9 @@ const availableCats = [
 
 export default function AvailableCats() {
   const [cats, setCats] = useState([]);
+  const [filteredCats, setFilteredCats] = useState([]);
+  const [breedFilter, setBreedFilter] = useState('');
+  const [nameFilter, setNameFilter] = useState('');
 
   useEffect(() => {
     // Fetch cat images from an API endpoint and assign it to the featuredCats list
@@ -31,16 +34,38 @@ export default function AvailableCats() {
     fetchCatImages();
   }, []);
 
+  useEffect(() => {
+    const applyFilters = () => {
+      let filtered = [...cats];
+      if (breedFilter) filtered = filtered.filter((cat) => cat.breed === breedFilter);
+      if (nameFilter) filtered = filtered.filter((cat) => cat.name.toLowerCase().includes(nameFilter.toLowerCase()));
+      setFilteredCats(filtered);
+    };
+
+    applyFilters();
+  }, [breedFilter, nameFilter, cats]);
+
   return (
     <section className="text-center mt-4">
       <h2>Available Cats</h2>
       <p>Meet our adorable cats looking for their forever home!</p>
+      <div className="filters d-flex justify-content-center gap-3 mt-3">
+        <select onChange={(e) => setBreedFilter(e.target.value)} className="form-select w-auto">
+          <option value="">All Breeds</option>
+          {Array.from(new Set(availableCats.map((cat) => cat.breed))).map((breed, i) => (
+            <option key={i} value={breed}>
+              {breed}
+            </option>
+          ))}
+        </select>
 
-      <div className="mt-2 row g-4 cats-container" id="cats-container">
-        {cats.map((cat, i) => (
+        <input type="text" placeholder="Search by name" className="form-control w-auto" onChange={(e) => setNameFilter(e.target.value)} />
+      </div>
+      <div className="mt-4 row g-4">
+        {filteredCats.map((cat, i) => (
           <div key={i} className="col-md-4">
             <div className="cat-card">
-              <img src={cat.image} alt={cat.name} className="img-fluid mb-2" style={{ borderRadius: '8px', height: '168px', objectFit: 'cover' }} />
+              <img src={cat.image} alt={cat.name} className="img-fluid mb-2" style={{ borderRadius: '8px', height: '160px', objectFit: 'cover' }} />
               <div className="cat-info">
                 <h3 className="h5 mb-1">{cat.name}</h3>
                 <p className="mb-0">Age: {cat.age}</p>

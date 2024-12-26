@@ -1,11 +1,12 @@
 import React from 'react';
+import "./AboutUs.css";
 
 export default function AboutUs() {
   return (
     <div className="aoubt-container">
-      <section className="text-center mt-4">
+      {/* <section className="text-center mt-4">
         <h1>ABOUT US</h1>
-      </section>
+      </section> */}
       <section className="text-center mt-4">
         <h3>OUR MISSION</h3>
         <p>
